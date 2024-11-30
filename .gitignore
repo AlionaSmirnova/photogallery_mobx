@@ -65,6 +65,9 @@ yarn-error.log
 # testing
 /coverage
 
+src/store/api_key.ts
+
+
 # Yarn
 .yarn/*
 !.yarn/patches
