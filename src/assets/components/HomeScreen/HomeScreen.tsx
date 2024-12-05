@@ -9,6 +9,7 @@ import {
   View,
   FlatList,
   Pressable,
+  ActivityIndicator
 } from 'react-native';
 
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -32,10 +33,36 @@ const HomeScreen: React.FC<PropTypes> = ({navigation}: PropTypes) => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+  const [page, setPage] = useState(1);
+  const [photosArr, setPhotosArr] = useState([]);
 
   useEffect(() => {
-    mainStore.getImages();
+    mainStore.getImages(page);
+//  if(mainStore?.imageData) {
+//   setTimeout(() => {
+//     setPhotosArr(mainStore?.imageData);
+//   }, 1200);
+
+//  } 
+ 
   }, []);
+  
+
+  const goToNextPage = React.useCallback(() => {
+  
+const nextPage = +mainStore.imageData.page +1;
+if (+mainStore.imageData.per_page < +nextPage) return;
+mainStore.getImages(nextPage);
+
+//  newData  =  mainStore.getImages(nextPage);попробовать пуш в массив
+// console.log(newData, 'new DATA')
+
+
+// setPhotosArr(prevData => ({...prevData, newData})); 
+// setPhotosArr(prevData => console.log(prevData,'prev'));
+
+  },[mainStore.imageData]);
+
 
   const renderItem = ({item}) => {
     return (
@@ -61,14 +88,27 @@ const HomeScreen: React.FC<PropTypes> = ({navigation}: PropTypes) => {
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
-      />
+      />   
+      {/* {photosArr.length===0 ? ( */}
+      {mainStore.loader ? (
+      <ActivityIndicator size={'large'} />
+      ) : ( 
+        <> 
       <Text style={styles.welcomeText}>Welcome to the Photo Gallery! </Text>
+      
       <FlatList
-        data={mainStore?.imageData?.photos}
+         data={mainStore?.imageData?.photos}
+        // data={photosArr?.photos}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         numColumns={3}
+        onEndReached={goToNextPage}
+      
+        onEndReachedThreshold={0.1}
+       
       />
+      </>
+      )}
     </SafeAreaView>
   );
 };

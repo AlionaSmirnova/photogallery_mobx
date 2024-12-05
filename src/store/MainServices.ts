@@ -8,8 +8,8 @@ export default class MainService{
         this.mainApi = new MainApi();
     }
 
-    getImages = async(): Promise<ImageData[]> =>{
-        const {data} = await this.mainApi.getImages()
+    getImages = async(page:number): Promise<ImageData[]> =>{
+        const {data} = await this.mainApi.getImages(page)
 return data;
     }
 }

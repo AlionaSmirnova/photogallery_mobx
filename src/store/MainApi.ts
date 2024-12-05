@@ -4,8 +4,8 @@ import { ImageData } from "./MainTypes"
 import { apiKey } from "./MainStore"
 
 export default class MainApi{
-    getImages = async(): Promise<AxiosResponse<ImageData[]>> => {
-         return await API.get('/curated',{
+    getImages = async(page:number): Promise<AxiosResponse<ImageData[]>> => {
+         return await API.get(`/curated?&page=${page}`,{
                     headers:{
                         'Authorization': apiKey
                     },

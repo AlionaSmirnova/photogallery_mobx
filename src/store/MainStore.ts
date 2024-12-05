@@ -22,11 +22,13 @@ export default class MainStore {
     this.mainService = new MainService();
   }
 
-  getImages = async () => {
+  getImages = async(page:number) => {
     this.setIsLoading(true);
   
     try {
-      const res = await this.mainService.getImages();
+      const res = await this.mainService.getImages(page);
+      console.log('result', res);
+      //next_page - ссылка на следующую страницу
       runInAction(() => {
         this.imageData = res;
       });
