@@ -9,7 +9,7 @@ import {
   View,
   FlatList,
   Pressable,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -35,34 +35,39 @@ const HomeScreen: React.FC<PropTypes> = ({navigation}: PropTypes) => {
   };
   const [page, setPage] = useState(1);
   const [photosArr, setPhotosArr] = useState([]);
+  const [newArr, setNewArr] = useState([]);
 
   useEffect(() => {
     mainStore.getImages(page);
-//  if(mainStore?.imageData) {
-//   setTimeout(() => {
-//     setPhotosArr(mainStore?.imageData);
-//   }, 1200);
-
-//  } 
- 
+    // if (mainStore?.imageData) {
+    //   setTimeout(() => {
+    //     setPhotosArr(mainStore?.imageData);
+    //   }, 1200);
+    // }
   }, []);
-  
 
-  const goToNextPage = React.useCallback(() => {
-  
-const nextPage = +mainStore.imageData.page +1;
-if (+mainStore.imageData.per_page < +nextPage) return;
-mainStore.getImages(nextPage);
+  // const loadMore = (pageNum: number) => {
+  //   mainStore.getImages(pageNum);
+  //   setTimeout(() => {
+  //     console.log(mainStore.imageData, 'NEW DATA hi');
+  //     let arr = [];
+  //     arr.push(mainStore.imageData);
+  //     setNewArr(arr);
+  //     console.log(newArr,'NEW ARR');
+  //   }, 1000);
+  // };
 
-//  newData  =  mainStore.getImages(nextPage);попробовать пуш в массив
-// console.log(newData, 'new DATA')
+  const goToNextPage = React.useCallback(async () => {
 
+    const nextPage = +mainStore.imageData.page + 1;
+    // await loadMore(nextPage);
+    if (+mainStore.imageData.per_page < +nextPage) return;
+    mainStore.getImages(nextPage);
+    // console.log(newArr,' new arr go to')
+    // console.log(typeof photosArr, 'type photos arr', typeof newArr,'type new')
 
-// setPhotosArr(prevData => ({...prevData, newData})); 
-// setPhotosArr(prevData => console.log(prevData,'prev'));
-
-  },[mainStore.imageData]);
-
+    // setPhotosArr({...photosArr, ...newArr});
+  }, [mainStore.imageData, photosArr, newArr]);
 
   const renderItem = ({item}) => {
     return (
@@ -76,7 +81,7 @@ mainStore.getImages(nextPage);
               photographer: item?.photographer,
             })
           }>
-          <Image src={item?.src?.original} style={{width: 124, height: 130}} />
+          <Image src={item?.src?.original} style={{width: 130, height: 155}} />
           <Text style={styles.photographer}>{item?.photographer}</Text>
         </Pressable>
       </View>
@@ -88,26 +93,24 @@ mainStore.getImages(nextPage);
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
-      />   
-      {/* {photosArr.length===0 ? ( */}
-      {mainStore.loader ? (
-      <ActivityIndicator size={'large'} />
-      ) : ( 
-        <> 
-      <Text style={styles.welcomeText}>Welcome to the Photo Gallery! </Text>
-      
-      <FlatList
-         data={mainStore?.imageData?.photos}
-        // data={photosArr?.photos}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        numColumns={3}
-        onEndReached={goToNextPage}
-      
-        onEndReachedThreshold={0.1}
-       
       />
-      </>
+      {/* {photosArr.length === 0 ? ( */}
+     {mainStore.loader ? ( 
+        <ActivityIndicator size={'large'} />
+      ) : (
+        <>
+          <Text style={styles.welcomeText}>Welcome to the Photo Gallery! </Text>
+
+          <FlatList
+              data={mainStore?.imageData?.photos}
+            // data={photosArr?.photos}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            numColumns={2}
+            onEndReached={goToNextPage}
+            onEndReachedThreshold={0.1}
+          />
+        </>
       )}
     </SafeAreaView>
   );

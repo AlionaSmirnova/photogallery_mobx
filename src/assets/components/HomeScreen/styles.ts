@@ -18,7 +18,9 @@ fontSize:scale(13),
 marginVertical:scale(4),
     },
     imgBlock:{
-        height:scale(160)
+        // height:scale(160)
+        height:scale(180),
+        width:scale(100)
     },
     welcomeText:{
         textAlign:'center',

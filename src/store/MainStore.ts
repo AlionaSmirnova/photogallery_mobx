@@ -11,7 +11,7 @@ export const apiKey =
 
 export default class MainStore {
   loader: boolean = false;
-  imageData: ImageData[] =[];
+  imageData: ImageData[] = [];
 
   error: any = null;
 
@@ -27,8 +27,7 @@ export default class MainStore {
   
     try {
       const res = await this.mainService.getImages(page);
-      console.log('result', res);
-      //next_page - ссылка на следующую страницу
+      // console.log('result', res);
       runInAction(() => {
         this.imageData = res;
       });
